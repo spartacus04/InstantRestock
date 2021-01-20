@@ -21,6 +21,7 @@ public final class InstantRestock extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
     }
 
+    @EventHandler
     public void onVillagerCareerChange(VillagerCareerChangeEvent event){
         if(event.getProfession() != Villager.Profession.NITWIT || event.getProfession() != Villager.Profession.NONE){
             List<MerchantRecipe> new_recipes = new ArrayList<>();
@@ -35,6 +36,7 @@ public final class InstantRestock extends JavaPlugin implements Listener {
         }
     }
 
+    @EventHandler
     public void onVillagerAcquireTrade(VillagerAcquireTradeEvent event){
         List<MerchantRecipe> new_recipes = new ArrayList<>();
         for (MerchantRecipe recipe:
