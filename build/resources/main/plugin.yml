@@ -1,4 +1,4 @@
 name: InstantRestock
-version: '${version}'
+version: '1.0-SNAPSHOT'
 main: me.spartacus04.instantrestock.InstantRestock
 api-version: 1.14
