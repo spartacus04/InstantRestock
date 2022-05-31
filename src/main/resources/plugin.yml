@@ -1,4 +1,0 @@
-name: InstantRestock
-version: ${project.version}
-main: me.spartacus04.instantrestock.InstantRestock
-api-version: 1.16
