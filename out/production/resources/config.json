@@ -1,7 +1,0 @@
-{
-  //Disables the price penalty when trading too much.
-  //This works only in 1.18 and above.
-  "disablePricePenalty": true,
-  //Restores the villager trades to their original state.
-  "uninstallMode": false
-}
