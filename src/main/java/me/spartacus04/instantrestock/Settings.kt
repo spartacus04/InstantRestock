@@ -5,5 +5,6 @@ data class Settings(
     var villagerBlacklist: List<String> = listOf(),
     var disablePricePenalty: Boolean = false,
     var uninstallMode: Boolean = false,
-    var version118: Boolean = true
+    var version118: Boolean = true,
+    var allowTravellingMechants: Boolean = true,
 )

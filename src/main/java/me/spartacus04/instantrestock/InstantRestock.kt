@@ -5,6 +5,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.AbstractVillager
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Villager
 import org.bukkit.event.EventHandler
@@ -15,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class InstantRestock : JavaPlugin(), Listener {
     companion object {
-        var instance: InstantRestock? = null
+        lateinit var instance: InstantRestock
     }
 
 
@@ -35,36 +36,87 @@ class InstantRestock : JavaPlugin(), Listener {
 
     @EventHandler
     fun onPlayerInteractAtEntityEvent(e: PlayerInteractAtEntityEvent) {
-        if(e.rightClicked.type != EntityType.VILLAGER) return
+        if(e.rightClicked !is AbstractVillager) return
 
-        val villager = e.rightClicked as Villager
+        val merchant = e.rightClicked as AbstractVillager
 
-        if (config.uninstallMode || config.villagerBlacklist.contains(villager.profession.name)) {
-            val trades = villager.persistentDataContainer.get(key, TradesDataType()) ?: return
-
-            villager.recipes.forEachIndexed { i, r ->
-                try {
-                    if(trades[i] == -1) return@forEachIndexed
-                    r.maxUses = trades[i]
-                }
-                catch (_: Exception) {
-                    return@forEachIndexed
-                }
+        if(merchant.type == EntityType.WANDERING_TRADER && !config.allowTravellingMechants) {
+            if(merchant.persistentDataContainer.has(key, TradesDataType())) {
+                restoreVillagerTrades(merchant)
+                merchant.persistentDataContainer.remove(key)
             }
 
-            return villager.persistentDataContainer.remove(key)
+            return
         }
 
-        if(villager.profession == Villager.Profession.NITWIT || villager.profession == Villager.Profession.NONE) return
+        if(merchant.type == EntityType.VILLAGER) {
+            if(config.villagerBlacklist.contains((merchant as Villager).profession.name)) {
+                if(merchant.persistentDataContainer.has(key, TradesDataType())) {
+                    restoreVillagerTrades(merchant)
+                    merchant.persistentDataContainer.remove(key)
+                }
 
-        if(!villager.persistentDataContainer.has(key, TradesDataType())) {
-            villager.persistentDataContainer.set(key, TradesDataType(), villager.recipes.map {
-                it.maxUses
-            }.toIntArray())
+                return
+            }
+
+            if(merchant.profession == Villager.Profession.NITWIT ||
+                merchant.profession == Villager.Profession.NONE) return
+
         }
 
+        if(config.uninstallMode) {
+            if(merchant.persistentDataContainer.has(key, TradesDataType())) {
+                restoreVillagerTrades(merchant)
+                merchant.persistentDataContainer.remove(key)
+            }
+
+            return
+        }
+
+        if(!merchant.persistentDataContainer.has(key, TradesDataType())) {
+            saveVillagerTrades(merchant)
+        }
+
+        setMaxTrades(merchant, config.maxTrades)
+    }
+
+    @EventHandler
+    fun onVillagerUpgrade(e: VillagerAcquireTradeEvent) {
+        val merchant = e.entity
+
+        if(merchant.type == EntityType.WANDERING_TRADER && !config.allowTravellingMechants) return
+        if(config.uninstallMode) return
+
+        if(merchant.persistentDataContainer.has(key, TradesDataType())) {
+            restoreVillagerTrades(merchant)
+            saveVillagerTrades(merchant)
+
+            setMaxTrades(merchant, config.maxTrades)
+        }
+    }
+
+    private fun saveVillagerTrades(villager: AbstractVillager) {
+        villager.persistentDataContainer.set(key, TradesDataType(), villager.recipes.map {
+            it.maxUses
+        }.toIntArray())
+    }
+
+    private fun restoreVillagerTrades(villager: AbstractVillager) {
+        if(!villager.persistentDataContainer.has(key, TradesDataType())) return
+        val trades = villager.persistentDataContainer.get(key, TradesDataType()) ?: return
+        villager.recipes.forEachIndexed { i, r ->
+            try {
+                r.maxUses = trades[i]
+            }
+            catch (_: Exception) {
+                return@forEachIndexed
+            }
+        }
+    }
+
+    private fun setMaxTrades(villager: AbstractVillager, maxTrades: Int) {
         villager.recipes.forEach {
-            it.maxUses = config.maxTrades
+            it.maxUses = maxTrades
             if(config.maxTrades == Int.MAX_VALUE) it.uses = 0
             if(config.version118 && config.disablePricePenalty) it.demand = 0
         }
@@ -94,42 +146,13 @@ class InstantRestock : JavaPlugin(), Listener {
 
         config.version118 = subVersion >= 18
     }
-
-    @EventHandler
-    fun onVillagerUpgrade(e: VillagerAcquireTradeEvent) {
-        if(e.entity.type != EntityType.VILLAGER) return
-
-        val villager = e.entity as Villager
-
-        if(villager.persistentDataContainer.has(key, TradesDataType()) && !config.uninstallMode) {
-            val trades = villager.persistentDataContainer.get(key, TradesDataType()) ?: return
-            villager.recipes.forEachIndexed { i, r ->
-                try {
-                    r.maxUses = trades[i]
-                }
-                catch (_: Exception) {
-                    return@forEachIndexed
-                }
-            }
-
-            villager.persistentDataContainer.set(key, TradesDataType(), villager.recipes.map {
-                it.maxUses
-            }.toIntArray())
-
-            villager.recipes.forEach {
-                it.maxUses = config.maxTrades
-                it.uses = 0
-                if(config.version118 && config.disablePricePenalty) it.demand = 0
-            }
-        }
-    }
 }
 
 class CommandReload: CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if(sender.hasPermission("instantrestock.reload")) {
             sender.sendMessage("§aReloading Instantrestock...")
-            InstantRestock.instance?.reloadConfig()
+            InstantRestock.instance.reloadConfig()
             sender.sendMessage("§aReloaded!")
         } else {
             sender.sendMessage("§cYou don't have permission to do that!")
