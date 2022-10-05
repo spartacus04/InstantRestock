@@ -8,7 +8,7 @@
   //Disables infinite trades for certain types of villagers.
   //Accepted Values are:
   // ARMORER, BUTCHER, CARTOGRAPHER, CLERIC, FARMER, FISHERMAN,
-  // FLETCHER, LEATHERWORKER, LIBRARIAN, MASON, SHEPMAN, TOOLSMITH,
+  // FLETCHER, LEATHERWORKER, LIBRARIAN, MASON, SHEPHERD, TOOLSMITH,
   // WEAPONSMITH
   "villagerBlacklist": [
     "NITWIT",
@@ -16,7 +16,7 @@
     //...
   ],
   //Allows infinite trading with travelling mechants
-  "allowTravellingMechants": true,
+  "allowTravellingMerchants": true,
   //Restores the villager trades to their original state.
   "uninstallMode": false
 }

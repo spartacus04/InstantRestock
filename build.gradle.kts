@@ -24,10 +24,11 @@ dependencies {
     compileOnly("com.comphenix.protocol:ProtocolLib:4.8.0")
     implementation("com.google.code.gson:gson:2.9.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation("org.bstats:bstats-bukkit:3.0.0")
 }
 
 group = "me.spartacus04.instantrestock"
-version = "2.1"
+version = "2.3"
 description = "instantrestock"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
@@ -42,6 +43,7 @@ tasks.shadowJar {
     relocate("com/google/gson", "${dependencyPackage}.gson")
     relocate("org/intellij/lang", "${dependencyPackage}.lang")
     relocate("org/jetbrains/annotations", "${dependencyPackage}.annotations")
+    relocate("org/bstats", "${dependencyPackage}.bstats")
     exclude("ScopeJVMKt.class")
     exclude("DebugProbesKt.bin")
     exclude("META-INF/**")
