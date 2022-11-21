@@ -25,7 +25,9 @@
           "MASON",
           "SHEPHERD",
           "TOOLSMITH",
-          "WEAPONSMITH"
+          "WEAPONSMITH",
+          "NONE",
+          "NITWIT"
         ]
       }
     },
