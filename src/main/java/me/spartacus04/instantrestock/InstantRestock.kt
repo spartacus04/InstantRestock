@@ -31,7 +31,7 @@ class InstantRestock : JavaPlugin(), Listener {
         Updater(this, 88098).getVersion {
             if(it != description.version) {
                 Bukkit.getConsoleSender().sendMessage(
-                    "[§aInfiniteVillagerTrading§f] a new update is avaiable!"
+                    "[§aInfiniteVillagerTrading§f] a new update is available!"
                 )
             }
         }

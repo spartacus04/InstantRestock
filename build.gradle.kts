@@ -28,7 +28,7 @@ dependencies {
 }
 
 group = "me.spartacus04.instantrestock"
-version = "2.3.1"
+version = "2.3.2"
 description = "instantrestock"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 

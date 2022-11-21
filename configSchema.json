@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "maxTrades": {
+      "type": "integer"
+    },
+    "disablePricePenalty": {
+      "type": "boolean"
+    },
+    "villagerBlacklist": {
+      "type": "array",
+      "enum": [
+        "ARMORER",
+        "BUTCHER",
+        "CARTOGRAPHER",
+        "CLERIC",
+        "FARMER",
+        "FISHERMAN",
+        "FLETCHER",
+        "LEATHERWORKER",
+        "LIBRARIAN",
+        "MASON",
+        "SHEPHERD",
+        "TOOLSMITH",
+        "WEAPONSMITH"
+      ]
+    },
+    "allowTravellingMerchants": {
+      "type": "boolean"
+    },
+    "uninstallMode": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "maxTrades",
+    "disablePricePenalty",
+    "villagerBlacklist",
+    "allowTravellingMerchants",
+    "uninstallMode"
+  ]
+}

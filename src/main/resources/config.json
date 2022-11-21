@@ -1,10 +1,18 @@
 {
+  // Schema adds autocomplete to this file, do not touch
+
+  "$schema": "https://raw.githubusercontent.com/spartacus04/InstantRestock/master/configSchema.json",
+
+
   //Sets max trades for a villager
   //0 means Infinite (2147483647)
+
   "maxTrades": 0,
   //Disables the price penalty when trading too much.
   //This works only in 1.18 and above.
+
   "disablePricePenalty": true,
+
   //Disables infinite trades for certain types of villagers.
   //Accepted Values are:
   // ARMORER, BUTCHER, CARTOGRAPHER, CLERIC, FARMER, FISHERMAN,
@@ -15,8 +23,10 @@
     "NONE"
     //...
   ],
+
   //Allows infinite trading with travelling mechants
   "allowTravellingMerchants": true,
+
   //Restores the villager trades to their original state.
   "uninstallMode": false
 }
