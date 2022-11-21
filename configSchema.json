@@ -10,21 +10,24 @@
     },
     "villagerBlacklist": {
       "type": "array",
-      "enum": [
-        "ARMORER",
-        "BUTCHER",
-        "CARTOGRAPHER",
-        "CLERIC",
-        "FARMER",
-        "FISHERMAN",
-        "FLETCHER",
-        "LEATHERWORKER",
-        "LIBRARIAN",
-        "MASON",
-        "SHEPHERD",
-        "TOOLSMITH",
-        "WEAPONSMITH"
-      ]
+      "items": {
+        "type": "string",
+        "enum": [
+          "ARMORER",
+          "BUTCHER",
+          "CARTOGRAPHER",
+          "CLERIC",
+          "FARMER",
+          "FISHERMAN",
+          "FLETCHER",
+          "LEATHERWORKER",
+          "LIBRARIAN",
+          "MASON",
+          "SHEPHERD",
+          "TOOLSMITH",
+          "WEAPONSMITH"
+        ]
+      }
     },
     "allowTravellingMerchants": {
       "type": "boolean"
