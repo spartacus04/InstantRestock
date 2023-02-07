@@ -21,7 +21,6 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
-    compileOnly("com.comphenix.protocol:ProtocolLib:4.8.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.bstats:bstats-bukkit:3.0.0")
@@ -31,6 +30,7 @@ group = "me.spartacus04.instantrestock"
 version = "2.3.2"
 description = "instantrestock"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.targetCompatibility = JavaVersion.VERSION_1_8
 
 tasks.jar { enabled = false }
 
