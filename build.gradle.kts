@@ -2,51 +2,55 @@ plugins {
     java
     kotlin("jvm") version "1.8.22"
     id("com.github.johnrengelman.shadow") version "8.1.1"
+
+    `maven-publish`
+    id("io.papermc.hangar-publish-plugin") version "0.0.5"
+    id("com.modrinth.minotaur") version "2.8.1"
 }
 
-repositories {
-    mavenLocal()
-    maven {
-        url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    }
-
-    maven {
-        url = uri("https://repo.dmulloy2.net/nexus/repository/public/")
-    }
-
-    maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
+allprojects {
+    repositories {
+        mavenLocal()
+        maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
+        maven { url = uri("https://repo.dmulloy2.net/nexus/repository/public/") }
+        maven { url = uri("https://repo.maven.apache.org/maven2/") }
+        maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
     }
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib")
-    implementation("org.bstats:bstats-bukkit:3.0.2")
+    implementation(project(":core"))
+    implementation(project(":spigot"))
+    implementation(project(":folia"))
 }
 
 group = "me.spartacus04.instantrestock"
-version = "2.3.3"
+
+version = if (property("version_patch") == "0") {
+    "${property("version_major")}.${property("version_minor")}"
+} else {
+    "${property("version_major")}.${property("version_minor")}.${property("version_patch")}"
+}
+
 description = "instantrestock"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
 
-tasks.jar { enabled = false }
+tasks {
+    shadowJar {
+        archiveFileName.set("${rootProject.name}_${project.version}.jar")
+        val dependencyPackage = "${rootProject.group}.dependencies.${rootProject.name.lowercase()}"
+        from(subprojects.map { it.sourceSets.main.get().output })
 
-artifacts.archives(tasks.shadowJar)
-
-tasks.shadowJar {
-    archiveFileName.set(rootProject.name + ".jar")
-    val dependencyPackage = "${rootProject.group}.dependencies.${rootProject.name.toLowerCase()}"
-    relocate("kotlin", "${dependencyPackage}.kotlin")
-    relocate("com/google/gson", "${dependencyPackage}.gson")
-    relocate("org/intellij/lang", "${dependencyPackage}.lang")
-    relocate("org/jetbrains/annotations", "${dependencyPackage}.annotations")
-    relocate("org/bstats", "${dependencyPackage}.bstats")
-    exclude("ScopeJVMKt.class")
-    exclude("DebugProbesKt.bin")
-    exclude("META-INF/**")
+        relocate("kotlin", "${dependencyPackage}.kotlin")
+        relocate("com/google/gson", "${dependencyPackage}.gson")
+        relocate("org/intellij/lang", "${dependencyPackage}.lang")
+        relocate("org/jetbrains/annotations", "${dependencyPackage}.annotations")
+        relocate("org/bstats", "${dependencyPackage}.bstats")
+        exclude("ScopeJVMKt.class")
+        exclude("DebugProbesKt.bin")
+        exclude("META-INF/**")
+    }
 }
 
 java {
@@ -56,4 +60,61 @@ java {
     if(JavaVersion.current() < javaVersion) {
         toolchain.languageVersion.set(JavaLanguageVersion.of(17))
     }
+}
+
+artifacts.archives(tasks.shadowJar)
+
+// publish
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = rootProject.group.toString()
+            artifactId = rootProject.name.lowercase()
+            version = "${rootProject.version}"
+
+            from(components["java"])
+        }
+    }
+}
+
+hangarPublish {
+    val hangarApiKey = (project.findProperty("hangarApiKey") ?: "") as String
+    val hangarChangelog = (project.findProperty("hangarChangelog") ?: "") as String
+
+    publications.register("plugin") {
+        version.set("${project.version}")
+        namespace(
+            "${property("hangar_username")}",
+            "${property("hangar_slug")}"
+        )
+        channel.set("${property("hangar_channel")}")
+        changelog.set(hangarChangelog)
+
+        apiKey.set(hangarApiKey)
+
+        platforms {
+            register(io.papermc.hangarpublishplugin.model.Platforms.PAPER) {
+                jar.set(tasks.shadowJar.flatMap { it.archiveFile })
+                platformVersions.set("${property("minecraft_version")}".split(","))
+            }
+        }
+    }
+}
+
+modrinth {
+    val modrinthApiKey = (project.findProperty("modrinthApiKey") ?: "") as String
+    val modrinthChangelog = (project.findProperty("modrinthChangelog") ?: "") as String
+
+    token.set(modrinthApiKey)
+    projectId.set("${property("modrinth_projectId")}")
+    versionNumber.set(rootProject.version.toString())
+    versionType.set("${property("modrinth_channel")}")
+    uploadFile.set(tasks.shadowJar.flatMap { it.archiveFile })
+    gameVersions.set("${property("minecraft_versions")}".split(","))
+    loaders.set("${property("modrinth_loaders")}".split(","))
+
+    changelog.set(modrinthChangelog)
+
+    syncBodyFrom.set(rootProject.file("README.md").readText())
 }

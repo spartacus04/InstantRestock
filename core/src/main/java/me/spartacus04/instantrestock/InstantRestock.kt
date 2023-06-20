@@ -18,22 +18,30 @@ class InstantRestock : JavaPlugin(), Listener {
     private lateinit var key: NamespacedKey
 
     override fun onEnable() {
-        super.onEnable()
-
-        Metrics(this, 16589)
-
-        key = NamespacedKey(this, "instant_restock")
         SettingsContainer.reloadConfig(this)
+
         getCommand("instantrestock")!!.setExecutor(MainCommand(this))
 
+        key = NamespacedKey(this, "instant_restock")
         server.pluginManager.registerEvents(this, this)
 
-        Updater(this, 88098).getVersion {
+        if(CONFIG.allowMetrics)
+            Metrics(this, 16589)
+
+        getUpdater().checkForUpdates(88098) {
             if(it != description.version) {
                 Bukkit.getConsoleSender().sendMessage(
                     "[§aInfiniteVillagerTrading§f] a new update is available!"
                 )
             }
+        }
+    }
+
+    private fun getUpdater(): Updater {
+        return if(Bukkit.getServer().name == "Folia") {
+            Class.forName("me.spartacus04.instantrestock.FoliaUpdater").getConstructor().newInstance() as Updater
+        } else {
+            Class.forName("me.spartacus04.instantrestock.SpigotUpdater").getConstructor().newInstance() as Updater
         }
     }
 

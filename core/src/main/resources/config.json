@@ -28,5 +28,8 @@
   "allowTravellingMerchants": true,
 
   //Restores the villager trades to their original state.
-  "uninstallMode": false
+  "uninstallMode": false,
+
+  // Allow/Disallow plugin metrics (no personal data is going to be collected)
+  "allow-metrics": true
 }

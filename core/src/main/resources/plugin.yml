@@ -1,9 +1,10 @@
 name: InstantRestock
-version: 2.3.3
+version: 2.4
 author: spartacus04
 main: me.spartacus04.instantrestock.InstantRestock
 api-version: 1.14
 description: plugin to allow villagers to have infinite trades
+folia-supported: true
 
 commands:
   instantrestock:

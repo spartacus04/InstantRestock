@@ -9,6 +9,7 @@ data class Settings(
     var disablePricePenalty: Boolean = false,
     var uninstallMode: Boolean = false,
     var allowTravellingMerchants: Boolean = true,
+    var allowMetrics: Boolean = true
 )
 
 class SettingsContainer {
