@@ -96,11 +96,12 @@ hangarPublish {
         platforms {
             register(io.papermc.hangarpublishplugin.model.Platforms.PAPER) {
                 jar.set(tasks.shadowJar.flatMap { it.archiveFile })
-                platformVersions.set("${property("minecraft_version")}".split(","))
+                platformVersions.set("${property("minecraft_versions")}".split(","))
             }
         }
     }
 }
+
 
 modrinth {
     val modrinthApiKey = (project.findProperty("modrinthApiKey") ?: "") as String

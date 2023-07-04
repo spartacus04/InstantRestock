@@ -1,5 +1,5 @@
 
-rootProject.name = "instantRestock"
+rootProject.name = "instantrestock"
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
