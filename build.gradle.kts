@@ -79,8 +79,8 @@ publishing {
 }
 
 hangarPublish {
-    val hangarApiKey = (project.findProperty("hangarApiKey") ?: "") as String
-    val hangarChangelog = (project.findProperty("hangarChangelog") ?: "") as String
+    val hangarApiKey = System.getenv("hangarApiKey");
+    val hangarChangelog = System.getenv("hangarChangelog")
 
     publications.register("plugin") {
         version.set("${project.version}")
@@ -104,8 +104,8 @@ hangarPublish {
 
 
 modrinth {
-    val modrinthApiKey = (project.findProperty("modrinthApiKey") ?: "") as String
-    val modrinthChangelog = (project.findProperty("modrinthChangelog") ?: "") as String
+    val modrinthApiKey = System.getenv("modrinthApiKey")
+    val modrinthChangelog = System.getenv("modrinthChangelog")
 
     token.set(modrinthApiKey)
     projectId.set("${property("modrinth_projectId")}")
