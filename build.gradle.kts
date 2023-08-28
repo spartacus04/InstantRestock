@@ -4,7 +4,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 
     `maven-publish`
-    id("io.papermc.hangar-publish-plugin") version "0.0.5"
+    id("io.papermc.hangar-publish-plugin") version "0.1.0"
     id("com.modrinth.minotaur") version "2.8.3"
 }
 
