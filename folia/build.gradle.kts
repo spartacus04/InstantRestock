@@ -1,6 +1,6 @@
 plugins {
     java
-    kotlin("jvm") version "1.9.10"
+    kotlin("jvm") version "1.9.21"
 }
 
 group = "me.spartacus04.instantrestock"
