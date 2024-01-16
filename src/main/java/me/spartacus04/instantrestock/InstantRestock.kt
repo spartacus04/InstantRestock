@@ -14,6 +14,7 @@ import org.bukkit.event.entity.VillagerAcquireTradeEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.plugin.java.JavaPlugin
 
+@Suppress("unused")
 class InstantRestock : JavaPlugin(), Listener {
     private lateinit var key: NamespacedKey
 
@@ -28,20 +29,12 @@ class InstantRestock : JavaPlugin(), Listener {
         if(CONFIG.allowMetrics)
             Metrics(this, 16589)
 
-        getUpdater().checkForUpdates(88098) {
+        Updater(this).getVersion {
             if(it != description.version) {
                 Bukkit.getConsoleSender().sendMessage(
                     "[§aInfiniteVillagerTrading§f] a new update is available!"
                 )
             }
-        }
-    }
-
-    private fun getUpdater(): Updater {
-        return if(Bukkit.getServer().name == "Folia") {
-            Class.forName("me.spartacus04.instantrestock.FoliaUpdater").getConstructor().newInstance() as Updater
-        } else {
-            Class.forName("me.spartacus04.instantrestock.SpigotUpdater").getConstructor().newInstance() as Updater
         }
     }
 

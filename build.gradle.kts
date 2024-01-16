@@ -1,70 +1,116 @@
+import org.jetbrains.dokka.base.DokkaBase
+import org.jetbrains.dokka.base.DokkaBaseConfiguration
+import proguard.gradle.ProGuardTask
+import io.papermc.hangarpublishplugin.model.Platforms
+
 plugins {
     java
     kotlin("jvm") version "1.9.22"
     id("com.github.johnrengelman.shadow") version "8.1.1"
+
+    id("org.jetbrains.dokka") version "1.9.10"
 
     `maven-publish`
     id("io.papermc.hangar-publish-plugin") version "0.1.1"
     id("com.modrinth.minotaur") version "2.8.7"
 }
 
-allprojects {
+buildscript {
     repositories {
-        mavenLocal()
-        maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
-        maven { url = uri("https://repo.dmulloy2.net/nexus/repository/public/") }
-        maven { url = uri("https://repo.maven.apache.org/maven2/") }
-        maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.jetbrains.dokka:dokka-base:1.9.10")
+        classpath("com.guardsquare:proguard-gradle:7.4.1") {
+            exclude("com.android.tools.build")
+        }
     }
 }
 
+repositories {
+    mavenLocal()
+    maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
+    maven { url = uri("https://repo.dmulloy2.net/nexus/repository/public/") }
+    maven { url = uri("https://repo.maven.apache.org/maven2/") }
+    maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
+    maven { url = uri("https://jitpack.io") }
+}
+
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":spigot"))
-    implementation(project(":folia"))
+    compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation("org.bstats:bstats-bukkit:3.0.2")
+    implementation("com.github.Anon8281:UniversalScheduler:0.1.6")
 }
 
 group = "me.spartacus04.instantrestock"
 
-version = if (property("version_patch") == "0") {
-    "${property("version_major")}.${property("version_minor")}"
-} else {
-    "${property("version_major")}.${property("version_minor")}.${property("version_patch")}"
-}
+version = System.getenv("instantrestockVersion") ?: "dev"
 
 description = "instantrestock"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
 
-tasks {
-    shadowJar {
-        archiveFileName.set("${rootProject.name}_${project.version}.jar")
-        val dependencyPackage = "${rootProject.group}.dependencies.${rootProject.name.lowercase()}"
-        from(subprojects.map { it.sourceSets.main.get().output })
+tasks.shadowJar {
+    archiveFileName.set("${rootProject.name}_${project.version}-shadowed.jar")
+    val dependencyPackage = "${rootProject.group}.dependencies.${rootProject.name.lowercase()}"
+    from(subprojects.map { it.sourceSets.main.get().output })
 
-        relocate("kotlin", "${dependencyPackage}.kotlin")
-        relocate("com/google/gson", "${dependencyPackage}.gson")
-        relocate("org/intellij/lang", "${dependencyPackage}.lang")
-        relocate("org/jetbrains/annotations", "${dependencyPackage}.annotations")
-        relocate("org/bstats", "${dependencyPackage}.bstats")
-        exclude("ScopeJVMKt.class")
-        exclude("DebugProbesKt.bin")
-        exclude("META-INF/**")
-    }
+    relocate("kotlin", "${dependencyPackage}.kotlin")
+    relocate("com/google/gson", "${dependencyPackage}.gson")
+    relocate("org/intellij/lang", "${dependencyPackage}.lang")
+    relocate("org/jetbrains/annotations", "${dependencyPackage}.annotations")
+    relocate("org/bstats", "${dependencyPackage}.bstats")
+    relocate("com/github/Anon8281/universalScheduler", "${dependencyPackage}.universalScheduler")
+    exclude("ScopeJVMKt.class")
+    exclude("DebugProbesKt.bin")
+    exclude("META-INF/**")
+
+    minimize()
 }
 
-java {
-    val javaVersion = JavaVersion.toVersion(17)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    if(JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
 artifacts.archives(tasks.shadowJar)
 
+tasks.register<ProGuardTask>("proguardJar") {
+    outputs.upToDateWhen { false }
+    dependsOn("clean")
+    dependsOn("shadowJar")
+
+    injars(tasks.shadowJar.flatMap { it.archiveFile })
+
+    outjars("build/libs/${rootProject.name}_${project.version}.jar")
+
+    configuration("proguard-rules.pro")
+}
+
+tasks.processResources {
+    filesMatching("plugin.yml") {
+        expand("version" to project.rootProject.version)
+    }
+}
+
 // publish
+
+tasks.dokkaHtml {
+    val githubTag = System.getenv("githubTag")
+
+    if(githubTag != null) {
+        version = "$version - $githubTag"
+    }
+
+    pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
+        customStyleSheets = listOf(file("docsAssets/logo-styles.css"))
+        customAssets = listOf(file("icon.webp"))
+        footerMessage = "Infinite Villager Trades is licensed under the <a href=\"https://github.com/spartacus04/InstantRestock/blob/master/LICENSE.MD\">MIT</a> License."
+    }
+}
 
 publishing {
     publications {
@@ -79,7 +125,7 @@ publishing {
 }
 
 hangarPublish {
-    val hangarApiKey = System.getenv("hangarApiKey");
+    val hangarApiKey = System.getenv("hangarApiKey")
     val hangarChangelog = System.getenv("hangarChangelog")
 
     publications.register("plugin") {
@@ -91,7 +137,7 @@ hangarPublish {
         apiKey.set(hangarApiKey)
 
         platforms {
-            register(io.papermc.hangarpublishplugin.model.Platforms.PAPER) {
+            register(Platforms.PAPER) {
                 jar.set(tasks.shadowJar.flatMap { it.archiveFile })
                 platformVersions.set("${property("minecraft_versions")}".split(","))
             }
