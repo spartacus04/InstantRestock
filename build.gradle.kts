@@ -85,9 +85,9 @@ tasks.register<ProGuardTask>("proguardJar") {
 
     injars(tasks.shadowJar.flatMap { it.archiveFile })
 
-    outjars("build/libs/${rootProject.name}_${project.version}.jar")
-
     configuration("proguard-rules.pro")
+
+    outjars("build/libs/${rootProject.name}_${project.version}.jar")
 }
 
 tasks.processResources {

@@ -32,7 +32,7 @@ class InstantRestock : JavaPlugin(), Listener {
         Updater(this).getVersion {
             if(it != description.version) {
                 Bukkit.getConsoleSender().sendMessage(
-                    "[§aInfiniteVillagerTrading§f] a new update is available!"
+                    "[§aInfiniteVillagerTrading§f] A new update is available!"
                 )
             }
         }
@@ -43,6 +43,15 @@ class InstantRestock : JavaPlugin(), Listener {
         if(e.rightClicked !is AbstractVillager) return
 
         val merchant = e.rightClicked as AbstractVillager
+
+        if(CONFIG.uninstallMode) {
+            if(merchant.persistentDataContainer.has(key, TradesDataType())) {
+                restoreVillagerTrades(merchant)
+                merchant.persistentDataContainer.remove(key)
+            }
+
+            return
+        }
 
         if(merchant.type == EntityType.WANDERING_TRADER && !CONFIG.allowTravellingMerchants) {
             if(merchant.persistentDataContainer.has(key, TradesDataType())) {
@@ -62,20 +71,6 @@ class InstantRestock : JavaPlugin(), Listener {
 
                 return
             }
-
-            if(merchant.profession == Villager.Profession.NITWIT ||
-                merchant.profession == Villager.Profession.NONE) return
-
-            Villager.Profession.SHEPHERD
-        }
-
-        if(CONFIG.uninstallMode) {
-            if(merchant.persistentDataContainer.has(key, TradesDataType())) {
-                restoreVillagerTrades(merchant)
-                merchant.persistentDataContainer.remove(key)
-            }
-
-            return
         }
 
         if(!merchant.persistentDataContainer.has(key, TradesDataType())) {

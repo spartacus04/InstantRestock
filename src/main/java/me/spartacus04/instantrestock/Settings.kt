@@ -3,6 +3,16 @@ package me.spartacus04.instantrestock
 import com.google.gson.GsonBuilder
 import org.bukkit.plugin.java.JavaPlugin
 
+/**
+ * Represents the settings for the application.
+ *
+ * @property maxTrades The maximum number of trades allowed.
+ * @property villagerBlacklist The list of blacklisted villagers.
+ * @property disablePricePenalty Indicates if the price penalty is disabled.
+ * @property uninstallMode Indicates if the uninstall mode is enabled.
+ * @property allowTravellingMerchants Indicates if travelling merchants are allowed.
+ * @property allowMetrics Indicates if metrics are allowed.
+ */
 data class Settings(
     var maxTrades: Int = Int.MAX_VALUE,
     var villagerBlacklist: ArrayList<String> = ArrayList(),
@@ -12,7 +22,7 @@ data class Settings(
     var allowMetrics: Boolean = true
 )
 
-class SettingsContainer {
+internal class SettingsContainer {
     companion object {
         lateinit var CONFIG : Settings
         var VERSION118: Boolean = false
@@ -36,7 +46,7 @@ class SettingsContainer {
                     configFile.writeText(it?.readText()!!)
                 }
             } else {
-                if (configFile.readText().contains("Mechants")) {
+                if (configFile.readText().contains("Merchants")) {
                     configFile.delete()
                     return reloadConfig(plugin)
                 }

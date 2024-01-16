@@ -15,30 +15,43 @@ jobs:
         with:
           java-version: 17
           distribution: adopt
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.OS }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.OS }}-gradle-    
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Get artifact version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+
         # Build and publish
       - name: Build with Gradle
-        run: ./gradlew shadowJar
+        run: ./gradlew proguardJar
+        env:
+          instantrestockVersion: ${{ env.VERSION }}
 
       - name: Publish to Modrinth
         run: ./gradlew modrinth
         env:
           modrinthApiKey: ${{ secrets.MODRINTH_TOKEN }}
           modrinthChangelog: ${{ github.event.release.body }}
+          instantrestockVersion: ${{ env.VERSION }}
 
       - name: Publish to Hangar
         run: ./gradlew publishPluginPublicationToHangar
         env:
           hangarApiKey: ${{ secrets.HANGAR_TOKEN }}
           hangarChangelog: ${{ github.event.release.body }}
+          instantrestockVersion: ${{ env.VERSION }}
 
         # Attach output to release
-      - name: Get artifact version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
-
       - name: Attach artifact to release
         id: upload-release-asset
         uses: actions/upload-release-asset@v1.0.2
@@ -46,6 +59,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./build/libs/instantrestock_${{ steps.get_version.outputs.VERSION }}.jar
-          asset_name: instantrestock_${{ steps.get_version.outputs.VERSION }}.jar
+          asset_path: ./build/libs/instantrestock_${{ env.VERSION }}.jar
+          asset_name: instantrestock_${{ env.VERSION }}.jar
           asset_content_type: application/java-archive

@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.plugin.java.JavaPlugin
 
-class MainCommand(private val plugin : JavaPlugin) : CommandExecutor, TabCompleter {
+internal class MainCommand(private val plugin : JavaPlugin) : CommandExecutor, TabCompleter {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         try {
             when(args[0]) {
