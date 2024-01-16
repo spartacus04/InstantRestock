@@ -55,6 +55,10 @@ Use the following commands to configure the plugin:
 
 - `instantrestock.config`: Allows players to use the configuration commands listed above.
 
+## Contributing
+
+If somehow you want to integrate this plugin with yours you can find the javadocs [here](https://spartacus04.github.io/InstantRestock/).
+
 ## Support
 
 If you encounter any issues or have questions about the **InstantRestock** plugin, please reach out to us on the [Issue tracker](https://github.com/spartacus04/InstantRestock/issues).
