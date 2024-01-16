@@ -59,11 +59,15 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Get latest tag
+        id: get_latest_tag
+        run: echo "tag=${GITHUB_REF#refs/*/}" >> $LATEST_TAG
+
       - name: Build docs with Gradle
         run: ./gradlew dokkaHtml
         env:
           githubTag: ${{ github.ref }}
-          instantrestockVersion: ${{ github.ref#refs/tags/ }}
+          instantrestockVersion: ${{ steps.get_latest_tag.outputs.tag }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
