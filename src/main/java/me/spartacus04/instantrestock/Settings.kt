@@ -57,8 +57,8 @@ internal class SettingsContainer {
                 }
             }
 
-            val version = plugin.server.javaClass.`package`.name.replace(".", ",").split(",")[3]
-            val subVersion = Integer.parseInt(version.replace("1_", "").replace(Regex("_R\\d"), "").replace("v", ""))
+            val version = plugin.server.bukkitVersion.split("-")[0]
+            val subVersion = version.split(".")[1].toInt()
 
             VERSION118 = subVersion >= 18
         }
