@@ -63,7 +63,7 @@ class InstantRestock : JavaPlugin(), Listener {
         }
 
         if(merchant.type == EntityType.VILLAGER) {
-            if(CONFIG.villagerBlacklist.contains((merchant as Villager).profession.name)) {
+            if(CONFIG.villagerBlacklist.contains((merchant as Villager).profession.key.key.uppercase())) {
                 if(merchant.persistentDataContainer.has(key, TradesDataType())) {
                     restoreVillagerTrades(merchant)
                     merchant.persistentDataContainer.remove(key)

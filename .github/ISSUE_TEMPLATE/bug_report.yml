@@ -39,6 +39,12 @@ body:
       label: Server Version
       description: Select the server version
       options:
+        - 1.21.3
+        - 1.21.2
+        - 1.21.1
+        - '1.21'
+        - 1.20.6
+        - 1.20.5
         - 1.20.4
         - 1.20.3
         - 1.20.2
@@ -80,6 +86,7 @@ body:
         - Paper
         - Purpur
         - Folia
+        - Other (Specify)
     validations:
       required: true
   - type: checkboxes
