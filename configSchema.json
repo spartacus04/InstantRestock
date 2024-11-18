@@ -36,6 +36,9 @@
     },
     "uninstallMode": {
       "type": "boolean"
+    },
+    "checkUpdate": {
+      "type": "boolean"
     }
   },
   "required": [
@@ -43,6 +46,7 @@
     "disablePricePenalty",
     "villagerBlacklist",
     "allowTravellingMerchants",
-    "uninstallMode"
+    "uninstallMode",
+    "checkUpdate"
   ]
 }

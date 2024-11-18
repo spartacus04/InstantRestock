@@ -30,6 +30,9 @@
   //Restores the villager trades to their original state.
   "uninstallMode": false,
 
+  //Allows the plugin to check for updates
+  "checkUpdate": true,
+
   // Allow/Disallow plugin metrics (no personal data is going to be collected)
   "allow-metrics": true
 }
