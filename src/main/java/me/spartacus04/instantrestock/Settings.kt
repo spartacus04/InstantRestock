@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * @property disablePricePenalty Indicates if the price penalty is disabled.
  * @property uninstallMode Indicates if the uninstall mode is enabled.
  * @property allowTravellingMerchants Indicates if travelling merchants are allowed.
+ * @property checkUpdate Indicates if checking for updates is allowed.
  * @property allowMetrics Indicates if metrics are allowed.
  */
 data class Settings(
@@ -19,6 +20,7 @@ data class Settings(
     var disablePricePenalty: Boolean = false,
     var uninstallMode: Boolean = false,
     var allowTravellingMerchants: Boolean = true,
+    var checkUpdate: Boolean = true,
     var allowMetrics: Boolean = true
 )
 
