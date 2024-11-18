@@ -29,11 +29,13 @@ class InstantRestock : JavaPlugin(), Listener {
         if(CONFIG.allowMetrics)
             Metrics(this, 16589)
 
-        Updater(this).getVersion {
-            if(it != description.version) {
-                Bukkit.getConsoleSender().sendMessage(
-                    "[§aInfiniteVillagerTrading§f] A new update is available!"
-                )
+        if(CONFIG.checkUpdate) {
+            Updater(this).getVersion {
+                if(it != description.version) {
+                    Bukkit.getConsoleSender().sendMessage(
+                        "[§aInfiniteVillagerTrading§f] A new update is available!"
+                    )
+                }
             }
         }
     }
