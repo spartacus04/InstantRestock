@@ -65,7 +65,7 @@ class InstantRestock : JavaPlugin(), Listener {
         }
 
         if(merchant.type == EntityType.VILLAGER) {
-            if(CONFIG.villagerBlacklist.contains((merchant as Villager).profession.key.key.uppercase())) {
+            if(CONFIG.villagerBlacklist.contains(getProfessionKey(merchant as Villager).uppercase())) {
                 if(merchant.persistentDataContainer.has(key, TradesDataType())) {
                     restoreVillagerTrades(merchant)
                     merchant.persistentDataContainer.remove(key)
@@ -122,6 +122,20 @@ class InstantRestock : JavaPlugin(), Listener {
             if(CONFIG.maxTrades == Int.MAX_VALUE) it.uses = 0
             if(VERSION118 && CONFIG.disablePricePenalty) it.demand = 0
         }
+    }
+
+    /**
+     * In API versions 1.20.6 and earlier, Villager.Profession is a class.
+     * In versions 1.21 and later, it is an interface.
+     * This method uses reflection to get the profession.key.key field of the villager.
+     * @param villager The villager to get the profession of.
+     * @return The profession name of the villager.
+     */
+    private fun getProfessionKey(villager: Villager): String {
+        val profession = villager::class.java.getMethod("getProfession").invoke(villager)
+        val key = profession::class.java.getMethod("getKey").invoke(profession)
+        val keyKey = key::class.java.getMethod("getKey").invoke(key)
+        return keyKey.toString()
     }
 }
 
