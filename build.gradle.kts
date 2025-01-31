@@ -39,7 +39,7 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT")
-    implementation("com.google.code.gson:gson:2.12.0")
+    implementation("com.google.code.gson:gson:2.12.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("com.github.Anon8281:UniversalScheduler:0.1.6")
