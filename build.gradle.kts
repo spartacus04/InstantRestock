@@ -59,7 +59,7 @@ tasks.shadowJar {
     relocate("org/intellij/lang", "${dependencyPackage}.lang")
     relocate("org/jetbrains/annotations", "${dependencyPackage}.annotations")
     relocate("org/bstats", "${dependencyPackage}.bstats")
-    relocate("com/github/spartacus04/colosseum", "${dependencyPackage}.colosseum")
+    relocate("me/github/spartacus04/colosseum", "${dependencyPackage}.colosseum")
     relocate("com/google/errorprone", "${dependencyPackage}.errorprone")
     exclude("ScopeJVMKt.class")
     exclude("DebugProbesKt.bin")
@@ -134,7 +134,7 @@ hangarPublish {
 
         platforms {
             register(Platforms.PAPER) {
-                jar.set(tasks.shadowJar.flatMap { it.archiveFile })
+                jar.set(tasks.getByName("proguardJar").outputs.files.singleFile)
                 platformVersions.set("${property("minecraft_versions")}".split(","))
             }
         }
@@ -150,7 +150,7 @@ modrinth {
     projectId.set("${property("modrinth_projectId")}")
     versionNumber.set(rootProject.version.toString())
     versionType.set("${property("modrinth_channel")}")
-    uploadFile.set(tasks.shadowJar.flatMap { it.archiveFile })
+    uploadFile.set(tasks.getByName("proguardJar").outputs.files.singleFile)
     gameVersions.set("${property("minecraft_versions")}".split(","))
     loaders.set("${property("modrinth_loaders")}".split(","))
 
