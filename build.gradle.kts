@@ -1,5 +1,3 @@
-import org.jetbrains.dokka.base.DokkaBase
-import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import proguard.gradle.ProGuardTask
 import io.papermc.hangarpublishplugin.model.Platforms
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -31,7 +29,6 @@ buildscript {
 repositories {
     mavenLocal()
     maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
-    maven { url = uri("https://repo.dmulloy2.net/nexus/repository/public/") }
     maven { url = uri("https://repo.maven.apache.org/maven2/") }
     maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
     maven { url = uri("https://jitpack.io") }
@@ -39,10 +36,9 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT")
-    implementation("com.google.code.gson:gson:2.12.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.bstats:bstats-bukkit:3.1.0")
-    implementation("com.github.Anon8281:UniversalScheduler:0.1.6")
+    implementation("com.github.spartacus04:colosseum:1.0")
 }
 
 group = "me.spartacus04.instantrestock"
@@ -63,7 +59,8 @@ tasks.shadowJar {
     relocate("org/intellij/lang", "${dependencyPackage}.lang")
     relocate("org/jetbrains/annotations", "${dependencyPackage}.annotations")
     relocate("org/bstats", "${dependencyPackage}.bstats")
-    relocate("com/github/Anon8281/universalScheduler", "${dependencyPackage}.universalScheduler")
+    relocate("com/github/spartacus04/colosseum", "${dependencyPackage}.colosseum")
+    relocate("com/google/errorprone", "${dependencyPackage}.errorprone")
     exclude("ScopeJVMKt.class")
     exclude("DebugProbesKt.bin")
     exclude("META-INF/**")
@@ -97,16 +94,16 @@ tasks.processResources {
 
 // publish
 
-tasks.dokkaHtml {
-    val githubTag = System.getenv("githubTag")
+dokka {
+    pluginsConfiguration.html {
+        val githubTag = System.getenv("githubTag")
 
-    if(githubTag != null) {
-        version = "$version - $githubTag"
-    }
+        if(githubTag != null) {
+            version = "$version - $githubTag"
+        }
 
-    pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
-        customStyleSheets = listOf(file("docsAssets/logo-styles.css"))
-        customAssets = listOf(file("icon.webp"))
+        customStyleSheets.from(file("docsAssets/logo-styles.css"))
+        customAssets.from(file("icon.webp"))
         footerMessage = "Infinite Villager Trades is licensed under the <a href=\"https://github.com/spartacus04/InstantRestock/blob/master/LICENSE.MD\">MIT</a> License."
     }
 }

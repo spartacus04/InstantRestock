@@ -24,3 +24,6 @@ permissions:
   instantrestock.config:
     description: Allows the player to edit the config
     default: op
+  instantrestock.notifyupdate:
+    description: Notifies player of new update
+    default: op
