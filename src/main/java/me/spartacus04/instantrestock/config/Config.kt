@@ -83,5 +83,5 @@ data class Config(
 ) : FileBind("config.json", Config::class.java, PLUGIN) {
     @Suppress("unused")
     @SerializedName("\$schema")
-    private val schema = "https://raw.githubusercontent.com/spartacus04/InstantRestock/master/config.json"
+    private val schema = "https://raw.githubusercontent.com/spartacus04/InstantRestock/master/configSchema.json"
 }
