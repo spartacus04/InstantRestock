@@ -17,7 +17,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.jetbrains.dokka:dokka-base:2.0.0")
+        classpath("org.jetbrains.dokka:dokka-base:2.1.0")
         classpath("com.guardsquare:proguard-gradle:7.8.1") {
             exclude("com.android.tools.build")
         }
