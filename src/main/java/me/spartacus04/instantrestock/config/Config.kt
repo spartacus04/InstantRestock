@@ -3,7 +3,7 @@ package me.spartacus04.instantrestock.config
 import com.google.gson.annotations.SerializedName
 import me.spartacus04.colosseum.config.ConfigField
 import me.spartacus04.colosseum.config.FileBind
-import me.spartacus04.instantrestock.InstantRestockState.PLUGIN
+import me.spartacus04.instantrestock.InstantRestock
 
 /**
  * Represents the configuration for the plugin.
@@ -16,6 +16,7 @@ import me.spartacus04.instantrestock.InstantRestockState.PLUGIN
  * @property CHECK_UPDATE Indicates if checking for updates is allowed.
  * @property ALLOW_METRICS Indicates if metrics are allowed.
  */
+@Suppress("PropertyName")
 data class Config(
     @ConfigField(
         "Language",
@@ -80,8 +81,8 @@ data class Config(
     )
     @SerializedName("allowMetrics")
     var ALLOW_METRICS: Boolean = true
-) : FileBind("config.json", Config::class.java, PLUGIN) {
+) : FileBind("config.json", Config::class.java, InstantRestock.INSTANCE) {
     @Suppress("unused")
-    @SerializedName("\$schema")
+    @SerializedName($$"$schema")
     private val schema = "https://raw.githubusercontent.com/spartacus04/InstantRestock/master/configSchema.json"
 }

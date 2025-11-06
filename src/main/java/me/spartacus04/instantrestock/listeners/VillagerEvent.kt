@@ -1,9 +1,9 @@
 package me.spartacus04.instantrestock.listeners
 
+import me.spartacus04.colosseum.ColosseumPlugin
 import me.spartacus04.colosseum.listeners.ColosseumListener
-import me.spartacus04.instantrestock.InstantRestockState.CONFIG
-import me.spartacus04.instantrestock.InstantRestockState.KEY
-import me.spartacus04.instantrestock.InstantRestockState.VERSION
+import me.spartacus04.instantrestock.InstantRestock.Companion.CONFIG
+import me.spartacus04.instantrestock.InstantRestock.Companion.KEY
 import me.spartacus04.instantrestock.TradesDataType
 import org.bukkit.entity.AbstractVillager
 import org.bukkit.entity.EntityType
@@ -11,9 +11,8 @@ import org.bukkit.entity.Villager
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.VillagerAcquireTradeEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
-import org.bukkit.plugin.java.JavaPlugin
 
-internal class VillagerEvent(plugin: JavaPlugin) : ColosseumListener(plugin) {
+internal class VillagerEvent(private val plugin: ColosseumPlugin) : ColosseumListener(plugin) {
     @EventHandler
     fun onPlayerInteractAtEntityEvent(e: PlayerInteractAtEntityEvent) {
         if(e.rightClicked !is AbstractVillager) return
@@ -99,7 +98,7 @@ internal class VillagerEvent(plugin: JavaPlugin) : ColosseumListener(plugin) {
             }
 
             if(CONFIG.MAX_TRADES == Int.MAX_VALUE) it.uses = 0
-            if(VERSION >= "1.18" && CONFIG.DISABLE_PRICE_PENALTY) it.demand = 0
+            if(plugin.serverVersion >= "1.18" && CONFIG.DISABLE_PRICE_PENALTY) it.demand = 0
         }
     }
 

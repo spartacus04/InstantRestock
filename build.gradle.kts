@@ -2,7 +2,6 @@ import proguard.gradle.ProGuardTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    java
     kotlin("jvm") version "2.2.20"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 
@@ -34,10 +33,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.21.8-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.21.9-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.bstats:bstats-bukkit:3.1.0")
-    implementation("com.github.spartacus04:colosseum:1.0")
+    implementation("com.github.spartacus04:colosseum:1.1")
 }
 
 group = "me.spartacus04.instantrestock"

@@ -1,8 +1,10 @@
 {
   "update-available": "A new update is available!",
-  "reloading": "§aReloading Instantrestock...",
-  "reloaded": "§aReloaded!",
-  "no-permission": "§cYou don't have permission to use this command!",
-  "invalid-arguments": "§cInvalid value",
-  "config-updated": "§aConfig updated successfully!"
+  "reloading": "Reloading Instantrestock...",
+  "reloaded": "Reloaded!",
+  "error-no-permission": "You do not have permission to use this command.",
+  "error-malformed-command": "Malformed command: expected '§e%expected%§c' arguments, got '§e%got%§c'.",
+  "error-malformed-argument": "Malformed argument: expected '§e%expected%§c' at '§e%at%§c'.",
+  "error-insufficient-consumes": "Error: Expected at least §e'%$expected%'§c arguments at §e'%at%'§c, got §e'%got%'§c.",
+  "config-saved": "Config updated successfully!"
 }
