@@ -54,8 +54,6 @@ class InstantRestock : ColosseumPlugin() {
     }
 
     override fun onDisable() {
-        super.onDisable()
-
         colosseumLogger.warn("Disabled InstantRestock!")
     }
 
