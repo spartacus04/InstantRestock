@@ -1,5 +1,6 @@
 import proguard.gradle.ProGuardTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import xyz.jpenilla.runtask.task.AbstractRun
 
 plugins {
     kotlin("jvm") version "2.3.20"
@@ -10,6 +11,7 @@ plugins {
     `maven-publish`
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
     id("com.modrinth.minotaur") version "2.9.0"
+    id("xyz.jpenilla.run-paper") version "3.0.2"
 }
 
 buildscript {
@@ -36,7 +38,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:26.1.2-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.bstats:bstats-bukkit:3.2.1")
-    implementation("com.github.spartacus04:colosseum:1.2.1")
+    implementation("com.github.spartacus04:colosseum:1.2.2")
 }
 
 group = "me.spartacus04.instantrestock"
@@ -47,9 +49,11 @@ description = "instantrestock"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
 
+// Build
+
 tasks.shadowJar {
     archiveFileName.set("${rootProject.name}_${project.version}-shadowed.jar")
-    val dependencyPackage = "${rootProject.group}.dependencies.${rootProject.name.lowercase()}"
+    val dependencyPackage = "${rootProject.group}.dependencies"
     from(subprojects.map { it.sourceSets.main.get().output })
 
     relocate("kotlin", "${dependencyPackage}.kotlin")
@@ -57,7 +61,7 @@ tasks.shadowJar {
     relocate("org/intellij/lang", "${dependencyPackage}.lang")
     relocate("org/jetbrains/annotations", "${dependencyPackage}.annotations")
     relocate("org/bstats", "${dependencyPackage}.bstats")
-    relocate("me/github/spartacus04/colosseum", "${dependencyPackage}.colosseum")
+    relocate("me/spartacus04/colosseum", "${dependencyPackage}.colosseum")
     relocate("com/google/errorprone", "${dependencyPackage}.errorprone")
     exclude("ScopeJVMKt.class")
     exclude("DebugProbesKt.bin")
@@ -88,6 +92,20 @@ tasks.processResources {
     filesMatching("plugin.yml") {
         expand("version" to project.rootProject.version)
     }
+}
+
+// Test
+
+tasks.withType(AbstractRun::class) {
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+val lastSupportedVersion = "${property("minecraft_versions")}".split(",").last()
+
+tasks.runServer {
+    minecraftVersion(lastSupportedVersion)
 }
 
 // publish

@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender
 class ReloadCommand(private val plugin: ColosseumPlugin) : ColosseumCommand(plugin) {
     override val commandData = commandDescriptor("reload") {
         description = "Reloads the plugin configuration"
-        permissions = setOf("instantrestock.reload")
+        permissions = hashSetOf("instantrestock.reload")
     }
 
     override fun execute(ctx: CommandContext<CommandSender>) {

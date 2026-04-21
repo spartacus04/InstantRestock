@@ -9,6 +9,7 @@ import me.spartacus04.instantrestock.listeners.PlayerJoinEvent
 import me.spartacus04.instantrestock.listeners.VillagerEvent
 import org.bstats.bukkit.Metrics
 import org.bukkit.NamespacedKey
+import org.bukkit.plugin.java.JavaPlugin
 
 @Suppress("unused")
 class InstantRestock : ColosseumPlugin() {

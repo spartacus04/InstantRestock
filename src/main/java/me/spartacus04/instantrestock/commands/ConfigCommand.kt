@@ -128,7 +128,7 @@ class ConfigCommand(plugin: ColosseumPlugin) : ColosseumNestedCommand(plugin, "c
     )) {}
 )) {
     override val commandData = commandDescriptor("config") {
-        permissions = setOf("instantrestock.config")
+        permissions = hashSetOf("instantrestock.config")
     }
 
     companion object {
