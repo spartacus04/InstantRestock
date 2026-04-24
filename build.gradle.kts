@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import xyz.jpenilla.runtask.task.AbstractRun
 
 plugins {
-    kotlin("jvm") version "2.3.20"
+    kotlin("jvm") version "2.3.21"
     id("com.gradleup.shadow") version "9.4.1"
 
     id("org.jetbrains.dokka") version "2.2.0"
