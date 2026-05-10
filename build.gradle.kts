@@ -38,7 +38,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:26.1.2-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.bstats:bstats-bukkit:3.2.1")
-    implementation("com.github.spartacus04:colosseum:1.2.2")
+    implementation("com.github.spartacus04:colosseum:1.2.3")
 }
 
 group = "me.spartacus04.instantrestock"
