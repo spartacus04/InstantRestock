@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.VillagerAcquireTradeEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 
+@Suppress("unused")
 internal class VillagerEvent(private val plugin: ColosseumPlugin) : ColosseumListener(plugin) {
     @EventHandler
     fun onPlayerInteractAtEntityEvent(e: PlayerInteractAtEntityEvent) {

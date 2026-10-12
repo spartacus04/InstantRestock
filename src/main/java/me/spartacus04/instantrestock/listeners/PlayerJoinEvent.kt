@@ -8,6 +8,7 @@ import me.spartacus04.instantrestock.InstantRestock.Companion.CONFIG
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerJoinEvent
 
+@Suppress("unused")
 internal class PlayerJoinEvent(private val plugin: ColosseumPlugin) : ColosseumListener(plugin) {
     @EventHandler
     fun onPlayerJoin(e: PlayerJoinEvent) {
